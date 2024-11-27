@@ -15,7 +15,10 @@ import shutil
 import stat
 import yaml
 
-int_ceil = lambda x : int(math.ceil(x))
+
+def int_ceil(x):
+    return int(math.ceil(x))
+
 
 def makedirs(dirs):
     try:
@@ -180,11 +183,11 @@ class TileGenerator(object):
 
             for x in range(tiles_x):
                 makedirs(os.path.join(path, str(max_zoom_level - zoom_level), str(x)))
-                column_transform = cairo.Matrix(x0=-self.tile_size * x) # Shift image to left for x tiles
+                column_transform = cairo.Matrix(x0=-self.tile_size * x)  # Shift image to left for x tiles
 
                 for y in range(tiles_y):
                     tile_path = os.path.join(path, str(max_zoom_level - zoom_level), str(x), '{0}.png'.format(y))
-                    tile_transform = column_transform * cairo.Matrix(y0=-self.tile_size * y) # Shift image up for y tiles
+                    tile_transform = column_transform * cairo.Matrix(y0=-self.tile_size * y)  # Shift image up for y tiles
 
                     if self.draw_per_plane:
                         tile_context.set_matrix(tile_transform)
@@ -198,7 +201,7 @@ class TileGenerator(object):
 
                     if layer.invert:
                         tile_context.set_source_rgba(1.0, 1.0, 1.0, 1.0)
-                        tile_context.set_operator(23) # cairo.OPERATOR_DIFFERENCE is not defined
+                        tile_context.set_operator(23)  # cairo.OPERATOR_DIFFERENCE is not defined
                         tile_context.paint()
                         tile_context.set_operator(cairo.OPERATOR_OVER)
 
@@ -211,7 +214,7 @@ class LayerInfoStore(object):
 
     def store(self, path):
         document = []
-        for layer in sorted(self.layers, key=lambda layer:layer.position):
+        for layer in sorted(self.layers, key=lambda layer:layer.position, reverse=True):
             document.append({
                 'name': layer.name,
                 'max_zoom': layer.max_zoom_level,
@@ -220,6 +223,7 @@ class LayerInfoStore(object):
             })
         with open(path, "w") as f:
             json.dump(document, f)
+
 
 if __name__ == '__main__':
     layer_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'layers')
