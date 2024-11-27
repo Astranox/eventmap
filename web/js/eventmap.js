@@ -290,6 +290,14 @@ var marker_styles = {
 		shadowUrl: 'images/markers/Patchroom-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
+	},
+	"Label": {
+		iconUrl: 'images/marker-icon.png',
+		iconSize: [ 50, 82 ],
+		iconAnchor: [ 25, 82 ],
+		shadowUrl: 'images/marker-shadow.png',
+		shadowSize: [ 100, 70 ],
+		shadowAnchor: [ 25, 70 ],
 	}
 };
 

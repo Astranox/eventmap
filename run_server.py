@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # This file serves the static files in the
 # web directory and provides API endpoints
@@ -6,18 +6,16 @@
 #
 
 import os
-from io import StringIO
 import hashlib
 import threading
 import json
-import os
 import time
 import sys
-import threading
 
 import cherrypy
 
 ST_RDONLY = 1
+
 
 class SynchronizedJSONAutoLoader(threading.Thread):
     def __init__(self, synchronized_json):
@@ -32,6 +30,7 @@ class SynchronizedJSONAutoLoader(threading.Thread):
             with self._synchronized_json.lock:
                 self._synchronized_json.load()
         print("Autoloader Exiting")
+
 
 class SynchronizedJSON(object):
     def __init__(self, filename):
@@ -96,18 +95,19 @@ class SynchronizedJSON(object):
 
         self.cur = self._new
 
+
 class EventMapMarkerApi(object):
     def __init__(self, path):
         self.marker_doc = SynchronizedJSON(os.path.join(path, 'markers.json'))
 
     @cherrypy.expose
     def get(self):
-        cherrypy.response.headers['Content-Type']= 'application/json'
+        cherrypy.response.headers['Content-Type'] = 'application/json'
         return self.marker_doc.cur['data']
 
     @cherrypy.expose
     def poll(self, current):
-        cherrypy.response.headers['Content-Type']= 'application/json'
+        cherrypy.response.headers['Content-Type'] = 'application/json'
         counter = 0
         while self.marker_doc.cur['sync-id'] == current:
             time.sleep(1)
@@ -132,15 +132,18 @@ class EventMapMarkerApi(object):
             if 'version' not in doc or doc['version'] != '23.1':
                 raise cherrypy.HTTPError(503, "Sorry, but your local script is out of date. Please reload.")
             self.marker_doc.set_data(data)
-        cherrypy.response.headers['Content-Type']= 'application/json'
+        cherrypy.response.headers['Content-Type'] = 'application/json'
         return '{}'
+
 
 class EventMapApi(object):
     def __init__(self, path):
         self.markers = EventMapMarkerApi(path)
 
+
 def test_log(msg, level):
     print("%s, %s" % (msg, level))
+
 
 if __name__ == '__main__':
     publish = len(sys.argv) >= 2 and sys.argv[1] == '-P'

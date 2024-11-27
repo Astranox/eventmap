@@ -33,6 +33,8 @@ class Layer(object):
         if self.name is None:
             self.name = os.path.splitext(os.path.basename(path))[0]
 
+        # read position, if not specified sort by name
+        self.position = info.get('position', self.name)
         self._scale = info.get('scale', 1.0)
         self._x_offset = info.get('x-offset', 0.0)
         self._y_offset = info.get('y-offset', 0.0)
@@ -209,7 +211,7 @@ class LayerInfoStore(object):
 
     def store(self, path):
         document = []
-        for layer in sorted(self.layers, key=lambda layer:layer.name):
+        for layer in sorted(self.layers, key=lambda layer:layer.position):
             document.append({
                 'name': layer.name,
                 'max_zoom': layer.max_zoom_level,
