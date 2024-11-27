@@ -508,7 +508,7 @@ L.GeometryUtil.readableDistance = function(distance, unit) {
 	return old_readable_distance(distance/divider,unit);
 };
 
-function map_init(map_options) {
+function map_init(map_options, eventmap_options) {
 	$("#progress").html("Initializing map...");
 	map = L.map('map', map_options);
 
@@ -596,7 +596,10 @@ function map_init(map_options) {
 	$("#progress").html("Retrieving layer info...");
 	$.getJSON('js/layers.json', function(data) {
 		$("#progress").html("Creating layers...");
-		var first_layer = true;
+		var first_layer = false;
+		if (eventmap_options.startlayer !== undefined) {
+			first_layer = eventmap_options.startlayer;
+		}
 		$.each(data, function(layer_index, layer_info) {
 			if (layer_index == 0) {
 				var metadata = false;
@@ -648,12 +651,12 @@ function map_init(map_options) {
 			layers[layer_info.name] = layer;
 			layer_infos[layer_info.name] = layer_info;
 
-			if (first_layer) {
-				map.addLayer(layer);
-				first_layer = false;
+			if (first_layer === false) {
+				first_layer = layer_info.name;
 			}
 		});
 		var layer_control = L.control.layers(layers, {});
+		map.addLayer(layers[first_layer]);
 		map.on('baselayerchange', function() {
 			if (search_control._markerLoc !== undefined)
 				search_control._markerLoc.hide();
@@ -695,14 +698,19 @@ function load_map_settings() {
 		continuousWorld: true,
 		zoom: 4
 	};
+	var eventmap_options = {
+		startlayer: "EG"
+	}
 
 	$.getJSON('js/map.json', function(data) {
 		if (data.zoom !== undefined)
 			map_options.zoom = data.zoom;
 		if (data.center !== undefined)
 			map_options.center = new L.LatLng(data.center[0], data.center[1]);
+		if (data.startlayer !== undefined)
+			eventmap_options.startlayer = data.startlayer
 	}).always(function() {
-		map_init(map_options)
+		map_init(map_options, eventmap_options)
 	});
 }
 
