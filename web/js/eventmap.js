@@ -696,7 +696,8 @@ function load_map_settings() {
 		center: new L.LatLng(80,-120),
 		contextmenu: true,
 		continuousWorld: true,
-		zoom: 4
+		zoom: 4,
+		minZoom: 0
 	};
 	var eventmap_options = {
 		startlayer: "EG"
@@ -705,6 +706,8 @@ function load_map_settings() {
 	$.getJSON('js/map.json', function(data) {
 		if (data.zoom !== undefined)
 			map_options.zoom = data.zoom;
+		if (data.minZoom !== undefined)
+			map_options.minZoom = data.minZoom;
 		if (data.center !== undefined)
 			map_options.center = new L.LatLng(data.center[0], data.center[1]);
 		if (data.startlayer !== undefined)

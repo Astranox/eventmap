@@ -36,8 +36,8 @@ class Layer(object):
         if self.name is None:
             self.name = os.path.splitext(os.path.basename(path))[0]
 
-        # read position, if not specified sort by name
-        self.position = info.get('position', self.name)
+        # read floor number, if not specified sort by name
+        self.floor = info.get('floor', self.name)
         self._scale = info.get('scale', 1.0)
         self._x_offset = info.get('x-offset', 0.0)
         self._y_offset = info.get('y-offset', 0.0)
@@ -72,6 +72,8 @@ class PdfLayer(Layer):
         from gi.repository import Poppler
         document = Poppler.Document.new_from_file('file://{0}'.format(path), None)
         self._page = document.get_page(0)
+        print(f"{path}: width: {self._orig_width}")
+        print(f"{path}: height: {self._orig_height}")
 
     @property
     def _orig_width(self):
@@ -214,7 +216,7 @@ class LayerInfoStore(object):
 
     def store(self, path):
         document = []
-        for layer in sorted(self.layers, key=lambda layer:layer.position, reverse=True):
+        for layer in sorted(self.layers, key=lambda layer:layer.floor, reverse=True):
             document.append({
                 'name': layer.name,
                 'max_zoom': layer.max_zoom_level,
