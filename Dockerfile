@@ -9,14 +9,12 @@ RUN set -x \
 		python3-gi-cairo \
 		python3-pip \
 		python3-setuptools \
-		python3-wheel
+		python3-wheel \
+		python3-cherrypy3 \
+		python3-yaml
 
 RUN mkdir /srv/eventmap
 WORKDIR /srv/eventmap
-COPY requirements.txt /srv/eventmap/requirements.txt
-
-RUN pip3 install -r requirements.txt
-
 COPY ./ /srv/eventmap
 
 VOLUME [ "/srv/eventmap/data" ]
