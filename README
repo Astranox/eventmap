@@ -17,6 +17,15 @@ supply meta information for that layer by adding a file floor_1.pdf.txt.
 There you can e.g. provide a name for that layer or describe how it
 should be scaled translated which allows you e.g. to align multiple floorplans.
 
+To calculate the offset if all plans have the same size and you want your center at 0/0:
+0) set imgdim to width or height of rendered pdf (probably when pdf is rendered
+   on 72dpi, but best to print height and width of pdf-to-img result in src)
+1) decide desired scale (more scale usually gives more zoom levels)
+2) increase maxzoom from 0 as long as result is negative.
+3) first positive result value is what you may use as x or y offset for it to be centered
+   imgdim=orig_width; scale=8; maxzoom=6; x_offset=256*(2**maxzoom)/2-width/2*(scale); print(off)
+   imgdim=orig_height; scale=8; maxzoom=6; y_offset=256*(2**maxzoom)/2-height/2*(scale); print(off)
+
 2. Generating layer information and tilesets
 
 Run the read_layers.py script. It will look for layers in the layers directory,
