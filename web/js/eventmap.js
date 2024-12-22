@@ -291,6 +291,14 @@ var marker_styles = {
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	},
+	"Patchpanel": {
+		iconUrl: 'images/markers/Patchpanel.png',
+		iconSize: [ 50, 79 ],
+		iconAnchor: [ 25, 79 ],
+		shadowUrl: 'images/markers/Patchpanel-shadow.png',
+		shadowSize: [ 100, 70 ],
+		shadowAnchor: [ 25, 70 ],
+	},
 	"Label": {
 		iconUrl: 'images/marker-icon.png',
 		iconSize: [ 50, 82 ],
