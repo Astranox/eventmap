@@ -631,7 +631,7 @@ function map_init(map_options, eventmap_options) {
 			var layer;
 			
 			if (layer_info.url === undefined) {
-				layer_path = 'images/tiles/' + layer_info.name
+				layer_path = 'tiles/' + layer_info.name
 						+ '/{z}/{x}/{y}.png';
 			} else {
 				layer_path = layer_info.url;
