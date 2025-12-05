@@ -304,7 +304,7 @@ var marker_styles = {
 		shadowAnchor: [ 25, 70 ],
 	},
 	"Label": {
-		iconUrl: 'css/images/marker-icon.png',
+		iconUrl: 'css/images/marker-icon-2x.png',
 		iconSize: [ 50, 82 ],
 		iconAnchor: [ 25, 82 ],
 		shadowUrl: 'css/images/marker-shadow.png',
