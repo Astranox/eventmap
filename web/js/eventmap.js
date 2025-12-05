@@ -268,42 +268,42 @@ function add_polyline_contextmenu(marker) {
 
 var marker_styles = {
 	"Switch": {
-		iconUrl: 'images/markers/Switch.png',
+		iconUrl: 'css/images/markers/Switch.png',
 		iconAnchor: [25, 70],
 		iconSize: [ 50, 70 ],
-		shadowUrl: 'images/markers/Switch-shadow.png',
+		shadowUrl: 'css/images/markers/Switch-shadow.png',
 		shadowSize: [ 100, 70],
 		shadowAnchor: [ 25, 70 ]
 	},
 	"AP": {
-		iconUrl: 'images/markers/AP.png',
+		iconUrl: 'css/images/markers/AP.png',
 		iconSize: [ 50,97 ],
 		iconAnchor: [ 25, 97],
-		shadowUrl: 'images/markers/AP-shadow.png',
+		shadowUrl: 'css/images/markers/AP-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	},
 	"Patchroom": {
-		iconUrl: 'images/markers/Patchroom.png',
+		iconUrl: 'css/images/markers/Patchroom.png',
 		iconSize: [ 50, 106 ],
 		iconAnchor: [ 25, 106 ],
-		shadowUrl: 'images/markers/Patchroom-shadow.png',
+		shadowUrl: 'css/images/markers/Patchroom-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	},
 	"Patchpanel": {
-		iconUrl: 'images/markers/Patchpanel.png',
+		iconUrl: 'css/images/markers/Patchpanel.png',
 		iconSize: [ 50, 79 ],
 		iconAnchor: [ 25, 79 ],
-		shadowUrl: 'images/markers/Patchpanel-shadow.png',
+		shadowUrl: 'css/images/markers/Patchpanel-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	},
 	"Label": {
-		iconUrl: 'images/marker-icon.png',
+		iconUrl: 'css/images/marker-icon.png',
 		iconSize: [ 50, 82 ],
 		iconAnchor: [ 25, 82 ],
-		shadowUrl: 'images/marker-shadow.png',
+		shadowUrl: 'css/images/marker-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	}
