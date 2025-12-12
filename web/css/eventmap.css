@@ -50,3 +50,5 @@ p.huge {
   bottom: 9px;
   display: none;
 }
+
+.leaflet-marker-icon { -webkit-touch-callout: none; }

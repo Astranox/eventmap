@@ -179,15 +179,19 @@ function eventmap_process_update(data) {
 			var marker = L.marker([marker_info.lat, marker_info.lng]);
 			var target_layer_group;
 
-			marker.bindLabel('', {
-				noHide: marker_labels_no_hide
+			marker.bindTooltip('', {
+				permanent: marker_labels_permanent
 			});
 
 			add_contextmenu(marker);
 
 			marker_set_type(marker, marker_info.type);
 			marker.options.label_text = marker_name;
-			marker.updateLabelContent(marker.options.label_text);
+			if (marker.getTooltip()) {
+				marker.getTooltip().setContent(marker.options.label_text);
+			} else {
+				marker.bindTooltip(marker.options.label_text);
+			}
 			marker_store[marker_name] = marker;
 
 			marker.options.layer_name = marker_info.layer;
@@ -268,42 +272,42 @@ function add_polyline_contextmenu(marker) {
 
 var marker_styles = {
 	"Switch": {
-		iconUrl: 'images/markers/Switch.png',
+		iconUrl: 'css/images/markers/Switch.png',
 		iconAnchor: [25, 70],
 		iconSize: [ 50, 70 ],
-		shadowUrl: 'images/markers/Switch-shadow.png',
+		shadowUrl: 'css/images/markers/Switch-shadow.png',
 		shadowSize: [ 100, 70],
 		shadowAnchor: [ 25, 70 ]
 	},
 	"AP": {
-		iconUrl: 'images/markers/AP.png',
+		iconUrl: 'css/images/markers/AP.png',
 		iconSize: [ 50,97 ],
 		iconAnchor: [ 25, 97],
-		shadowUrl: 'images/markers/AP-shadow.png',
+		shadowUrl: 'css/images/markers/AP-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	},
 	"Patchroom": {
-		iconUrl: 'images/markers/Patchroom.png',
+		iconUrl: 'css/images/markers/Patchroom.png',
 		iconSize: [ 50, 106 ],
 		iconAnchor: [ 25, 106 ],
-		shadowUrl: 'images/markers/Patchroom-shadow.png',
+		shadowUrl: 'css/images/markers/Patchroom-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	},
 	"Patchpanel": {
-		iconUrl: 'images/markers/Patchpanel.png',
+		iconUrl: 'css/images/markers/Patchpanel.png',
 		iconSize: [ 50, 79 ],
 		iconAnchor: [ 25, 79 ],
-		shadowUrl: 'images/markers/Patchpanel-shadow.png',
+		shadowUrl: 'css/images/markers/Patchpanel-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	},
 	"Label": {
-		iconUrl: 'images/marker-icon.png',
+		iconUrl: 'css/images/marker-icon-2x.png',
 		iconSize: [ 50, 82 ],
 		iconAnchor: [ 25, 82 ],
-		shadowUrl: 'images/marker-shadow.png',
+		shadowUrl: 'css/images/marker-shadow.png',
 		shadowSize: [ 100, 70 ],
 		shadowAnchor: [ 25, 70 ],
 	}
@@ -407,7 +411,11 @@ function rename_marker(marker) {
 		delete marker_store[label_text]
 
 	marker.options.label_text = new_label_text;
-	marker.updateLabelContent(marker.options.label_text);
+	if (marker.getTooltip()) {
+		marker.getTooltip().setContent(marker.options.label_text);
+	} else {
+		marker.bindTooltip(marker.options.label_text);
+	}
 
 	marker_store[new_label_text] = marker
 	eventmap_send_update();
@@ -456,20 +464,40 @@ function move_marker(marker) {
 }
 
 /* other functionality */
-var marker_labels_no_hide = false;
-function marker_labels_calc_nohide(e) {
-	marker_labels_no_hide = (map.getZoom() >= 5);
-	$.each(layers, function(layer_name, layer_group) {
-		var drawing_layer;
 
-		drawing_layer = layer_group.getLayers()[1]
-		$.each(drawing_layer.getLayers(), function(marker_index, marker) {
-			if (marker.options.label_text !== undefined
-			    && marker.options.label_text.startsWith("__"))
-				return true;
-			marker.setLabelNoHide(marker_labels_no_hide);
-		});
-	});
+function updateMarkerTooltipPermanence(marker, permanent) {
+    const text = marker.options.label_text;
+    const className = marker.options.tooltip_class || 'my-label';
+
+    // Remove the old tooltip
+    marker.unbindTooltip();
+
+    // Rebind with new permanence flag
+    marker.bindTooltip(text, {
+        permanent: permanent,
+        direction: 'top',
+        className: className
+    });
+
+    // If not permanent, ensure it is closed
+    if (!permanent) marker.closeTooltip();
+}
+
+var marker_labels_permanent = false;
+function marker_labels_calc_permanent(e) {
+    marker_labels_permanent = (map.getZoom() >= 5);
+
+    $.each(layers, function(layer_name, layer_group) {
+        var drawing_layer = layer_group.getLayers()[1];
+
+        $.each(drawing_layer.getLayers(), function(marker_index, marker) {
+            if (marker.options.label_text !== undefined &&
+                marker.options.label_text.startsWith("__"))
+                return true;
+
+            updateMarkerTooltipPermanence(marker, marker_labels_permanent);
+        });
+    });
 }
 
 function polyline_added(e) {
@@ -520,7 +548,7 @@ function map_init(map_options, eventmap_options) {
 	$("#progress").html("Initializing map...");
 	map = L.map('map', map_options);
 
-	map.on('zoomend', marker_labels_calc_nohide);
+	map.on('zoomend', marker_labels_calc_permanent);
 
 	draw_control = new L.Control.Draw({
 		draw: {
@@ -528,12 +556,13 @@ function map_init(map_options, eventmap_options) {
 			polygon: false,
 			rectangle: false,
 			circle: false,
+			circlemarker: false
 		}
 	});
 	map.addControl(draw_control);
 
 	var search_control = new L.Control.Search({
-		callData: function(input, callback) {
+		sourceData: function(input, callback) {
 			var input_lower = input.toLowerCase();
 			var records = [];
 
@@ -586,8 +615,8 @@ function map_init(map_options, eventmap_options) {
 			return;
 		}
 
-		created_object.bindLabel('', {
-			noHide: marker_labels_no_hide
+		created_object.bindTooltip('', {
+			permanent: marker_labels_permanent
 		});
 
 		var layer_name = active_layer_name();
@@ -631,7 +660,7 @@ function map_init(map_options, eventmap_options) {
 			var layer;
 			
 			if (layer_info.url === undefined) {
-				layer_path = 'images/tiles/' + layer_info.name
+				layer_path = 'tiles/' + layer_info.name
 						+ '/{z}/{x}/{y}.png';
 			} else {
 				layer_path = layer_info.url;

@@ -230,7 +230,7 @@ class LayerInfoStore(object):
 if __name__ == '__main__':
     layer_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'layers')
     web_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'web')
-    tiles_path = os.path.join(web_path, 'images', 'tiles')
+    tiles_path = os.path.join(web_path, 'tiles')
     layer_info_path = os.path.join(web_path, 'js', 'layers.json')
 
     if os.path.exists(tiles_path):
