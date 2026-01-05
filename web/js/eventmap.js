@@ -588,7 +588,7 @@ function map_init(map_options, eventmap_options) {
 			callback(records);
 		}
 	});
-	search_control.on('search_locationfound', function(location_info) {
+	search_control.on('search:locationfound', function(location_info) {
 		var marker = marker_store[location_info.text];
 		for (var key in layers) {
 			map.removeLayer(layers[key]);
